@@ -5,6 +5,5 @@ const sessionRoutes = Router()
 const sessionsController = new SessionsController()
 
 sessionRoutes.post('/', sessionsController.create)
-sessionRoutes.put('/', sessionsController.update)
 
 export { sessionRoutes }

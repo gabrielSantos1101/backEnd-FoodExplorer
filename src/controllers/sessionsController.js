@@ -3,7 +3,4 @@ export class SessionsController {
     const {  } = req.body
     res.json()
   }
-  async update(req, res) {
-    const {  } = req.body
-  }
 }

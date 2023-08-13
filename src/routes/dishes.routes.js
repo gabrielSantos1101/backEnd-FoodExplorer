@@ -1,10 +1,13 @@
 import { Router } from 'express'
 import { DishesController } from '../controllers/dishesController.js'
 
-const userRoutes = Router()
+const dishesRoutes = Router()
 const dishesController = new DishesController()
 
-userRoutes.post('/', dishesController.create)
-userRoutes.put('/', dishesController.update)
+dishesRoutes.get('/:id', dishesController.show)
+dishesRoutes.get('/', dishesController.index)
+dishesRoutes.post('/', dishesController.create)
+dishesRoutes.put('/:id', dishesController.update)
+dishesRoutes.delete('/:id', dishesController.delete)
 
-export { userRoutes }
+export { dishesRoutes }
