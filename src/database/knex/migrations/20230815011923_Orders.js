@@ -1,4 +1,4 @@
-exports.up = async (knex) => {
+export async function up(knex) {
   return await knex.schema.createTable('orders', (table) => {
     table.increments('id').primary()
     table.integer('user_id').references('id').inTable('users')
