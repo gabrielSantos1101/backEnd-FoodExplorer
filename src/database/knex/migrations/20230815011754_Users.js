@@ -1,12 +1,17 @@
-exports.up = (knex) =>
-  knex.schema.createTable('Users', (table) => {
+export async function up(knex) {
+  return await knex.schema.createTable('users', (table) => {
     table.increments('id').primary()
-    table.varchar('name')
-    table.varchar('email')
-    table.varchar('password')
-    table.varchar('avatar')
-    table.datetime('created_at')
-    table.datetime('updated_at')
+    table.string('name')
+    table.string('password')
+    table.string('email')
+    table.boolean('isAdmin')
+    table.string('address')
+    table.string('avatar')
+    table.datetime('created_at').defaultTo(knex.fn.now())
+    table.datetime('updated_at').defaultTo(knex.fn.now())
   })
+}
 
-exports.down = (knex) => knex.schema.dropTable('Users')
+export async function down(knex) {
+  return await knex.schema.dropTable('Users')
+}
