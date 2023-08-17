@@ -1,4 +1,5 @@
 import Config from '../../../knexfile.js'
 import knex from 'knex'
 
-export default knex(Config.development)
+const dbConnect = knex(Config.development)
+export default dbConnect

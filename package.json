@@ -7,6 +7,7 @@
   "scripts": {
     "start": "npm run migrate && node ./src/server.js",
     "dev": "nodemon ./src/server.js",
+    "migrate": "knex migrate:latest",
     "test": "test",
     "lint": "eslint src --ext .js --fix"
   },

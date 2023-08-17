@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import bcryptjs from 'bcryptjs'
 import { dbConnect } from '../database/sqlite/index.js'
+import { AppError } from '../utils/AppError.js'
 
 export class UserController {
   async create(req, res) {
@@ -12,7 +13,7 @@ export class UserController {
     )
 
     if (checkUser) {
-      throw new Error('This email is already registered', 409)
+      throw new AppError('Esse email já foi cadastrado', 409)
     }
 
     const hashedPassword = await bcryptjs.hash(password, 8)
@@ -28,7 +29,7 @@ export class UserController {
   async update(req, res) {
     const { name, email, password, old_password, avatar, address } = req.body
 
-    const user_id = req.user.id
+    const user_id = req.params.id
 
     const database = await dbConnect()
 
@@ -65,6 +66,13 @@ export class UserController {
       }
 
       user.password = await bcryptjs.hash(password, 8)
+    }
+
+    if ((password && address) || (password && avatar)) {
+      const checkOldPassword = await bcryptjs.compare(password, user.password)
+      if (!checkOldPassword) {
+        throw new Error('password error', 401)
+      }
     }
 
     await database.run(

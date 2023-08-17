@@ -2,8 +2,8 @@ export async function up(knex) {
   return await knex.schema.createTable('users', (table) => {
     table.increments('id').primary()
     table.string('name')
-    table.string('password')
     table.string('email')
+    table.string('password')
     table.boolean('isAdmin')
     table.string('address')
     table.string('avatar')
