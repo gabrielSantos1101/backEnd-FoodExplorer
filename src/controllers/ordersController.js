@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import knex from '../database/knex/index.js'
+import { AppError } from '../utils/AppError.js'
 
 export class OrdersController {
   async create(req, res) {
@@ -47,7 +48,7 @@ export class OrdersController {
 
       return res.status(201).json({ order: { id: Id, ...order } })
     } catch (error) {
-      console.error('Erro ao criar pedido:', error)
+      AppError('Erro ao criar pedido:', error)
       return res.status(500).json({ message: 'Erro ao criar pedido' })
     }
   }
@@ -56,8 +57,6 @@ export class OrdersController {
     try {
       const { id } = req.params
       const { status } = req.body
-      console.log(id)
-      console.log(status)
 
       await knex('orders').where('id', id).update({ status })
 
@@ -65,7 +64,7 @@ export class OrdersController {
         .status(200)
         .json({ message: 'Status do pedido atualizado com sucesso' })
     } catch (error) {
-      console.error('Erro ao atualizar o status do pedido:', error)
+      AppError('Erro ao atualizar o status do pedido:', error)
       return res
         .status(500)
         .json({ message: 'Erro ao atualizar o status do pedido' })
@@ -73,20 +72,56 @@ export class OrdersController {
   }
 
   async show(req, res) {
-    // const user_id = req.user.id
-    // const { keyword } = req.query
-    // return res.status(200).json(dish)
+    try {
+      const orders = await knex('orders').select('*')
+
+      return res.status(200).json({ orders })
+    } catch (error) {
+      AppError('Erro ao buscar as ordens:', error)
+      return res.status(500).json({ message: 'Erro ao buscar as ordens' })
+    }
   }
 
   async index(req, res) {
-    // const { keyword } = req.query
-    // return res.status(200).json(dishes)
+    try {
+      const { keyword } = req.query
+
+      let query = knex('orders')
+
+      if (keyword) {
+        query = query
+          .where('user_address', 'like', `%${keyword}%`)
+          .orWhere('status', 'like', `%${keyword}%`)
+      }
+
+      const orders = await query.select('*')
+
+      return res.status(200).json({ orders })
+    } catch (error) {
+      AppError('Erro ao buscar as ordens:', error)
+      return res.status(500).json({ message: 'Erro ao buscar as ordens' })
+    }
   }
 
   async delete(req, res) {
-    // const { id } = req.params
-    // const { user_id, created_at } = req.body
+    try {
+      const { id } = req.params
+      const user_id = req.user.id
 
-    return res.status(202).json({})
+      const order = await knex('orders').where({ id, user_id }).first()
+
+      if (!order) {
+        return res
+          .status(404)
+          .json({ message: 'Ordem não encontrada ou não pertence ao usuário' })
+      }
+
+      await knex('orders').where('id', id).del()
+
+      return res.status(202).json({ message: 'Ordem excluída com sucesso' })
+    } catch (error) {
+      AppError('Erro ao excluir a ordem:', error)
+      return res.status(500).json({ message: 'Erro ao excluir a ordem' })
+    }
   }
 }
