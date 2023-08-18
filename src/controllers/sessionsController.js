@@ -11,16 +11,16 @@ export class SessionsController {
     const user = await knex('users').where({ email }).first()
 
     if (!user) {
-      throw new AppError('usuario não encontrado', 401)
+      throw new AppError('usuario ou senha incorreta', 401)
     }
 
     const passwordMatch = await bcryptjs.compare(password, user.password)
     if (!passwordMatch) {
-      throw new AppError('usuario não encontrado', 401)
+      throw new AppError('usuario ou senha incorreta', 401)
     }
 
     const { secret, expiresIn } = authConfigs.jwt
-    const token = sign({ isAdmin: String(user.is_admin) }, secret, {
+    const token = sign({ isAdmin: String(user.isAdmin) }, secret, {
       subject: String(user.id),
       expiresIn,
     })
