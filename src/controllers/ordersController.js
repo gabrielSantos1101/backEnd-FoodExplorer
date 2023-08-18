@@ -53,16 +53,23 @@ export class OrdersController {
   }
 
   async update(req, res) {
-    const { user_id, new_status } = req.body
+    try {
+      const { id } = req.params
+      const { status } = req.body
+      console.log(id)
+      console.log(status)
 
-    const now = await knex.raw('SELECT NOW()')
+      await knex('orders').where('id', id).update({ status })
 
-    await knex('orders').where({ id: user_id }).update({
-      status: new_status,
-      updated_at: now,
-    })
-
-    return res.status(200).json({})
+      return res
+        .status(200)
+        .json({ message: 'Status do pedido atualizado com sucesso' })
+    } catch (error) {
+      console.error('Erro ao atualizar o status do pedido:', error)
+      return res
+        .status(500)
+        .json({ message: 'Erro ao atualizar o status do pedido' })
+    }
   }
 
   async show(req, res) {
