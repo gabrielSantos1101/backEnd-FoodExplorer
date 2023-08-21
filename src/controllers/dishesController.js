@@ -87,27 +87,34 @@ export class DishesController {
   }
 
   async index(req, res) {
+    const { dish, ingredient } = req.query
+
     try {
-      const dish_id = req.params.id
-      const dish = await knex('dishes').where('id', dish_id).first()
+      let dishesQuery = knex('dishes')
+        .select(['dishes.id', 'dishes.name'])
+        .distinct()
+        .orderBy('dishes.name')
 
-      if (!dish) {
-        throw new AppError('Prato não encontrado', 404)
+      if (dish) {
+        dishesQuery = dishesQuery.where('dishes.name', 'like', `%${dish}%`)
       }
 
-      const ingredients = await knex('ingredients')
-        .where('dish_id', dish_id)
-        .orderBy('name')
+      if (ingredient) {
+        const ingredientFilter = ingredient
+          .split(',')
+          .map((ingredient) => ingredient.trim())
 
-      const dishWithIngredients = {
-        dish,
-        ingredients,
+        dishesQuery = dishesQuery
+          .join('ingredients', 'dishes.id', '=', 'ingredients.dish_id')
+          .whereIn('ingredients.name', ingredientFilter)
       }
 
-      return res.status(200).json(dishWithIngredients)
+      const dishes = await dishesQuery
+
+      return res.status(200).json(dishes)
     } catch (error) {
-      console.error('Erro ao buscar prato:', error)
-      return res.status(500).json({ message: 'Erro ao buscar prato' })
+      console.error('Erro ao buscar pratos:', error)
+      return res.status(500).json({ message: 'Erro ao buscar pratos' })
     }
   }
 
