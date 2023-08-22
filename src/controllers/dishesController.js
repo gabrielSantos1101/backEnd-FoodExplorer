@@ -61,7 +61,7 @@ export class DishesController {
 
       return res.status(201).json({ message: 'Prato atualizado com sucesso' })
     } catch (error) {
-      console.error('Erro ao atualizar prato:', error)
+      AppError('Erro ao atualizar prato:', error)
       return res.status(500).json({ message: 'Erro ao atualizar prato' })
     }
   }
@@ -81,7 +81,7 @@ export class DishesController {
 
       return res.status(200).json(dishesWithIngredients)
     } catch (error) {
-      console.error('Erro ao buscar pratos:', error)
+      AppError('Erro ao buscar pratos:', error)
       return res.status(500).json({ message: 'Erro ao buscar pratos' })
     }
   }
@@ -113,7 +113,7 @@ export class DishesController {
 
       return res.status(200).json(dishes)
     } catch (error) {
-      console.error('Erro ao buscar pratos:', error)
+      AppError('Erro ao buscar pratos:', error)
       return res.status(500).json({ message: 'Erro ao buscar pratos' })
     }
   }
@@ -126,7 +126,7 @@ export class DishesController {
 
       return res.status(202).json({ message: 'Prato excluído com sucesso' })
     } catch (error) {
-      console.error('Erro ao excluir prato:', error)
+      AppError('Erro ao excluir prato:', error)
       return res.status(500).json({ message: 'Erro ao excluir prato' })
     }
   }
