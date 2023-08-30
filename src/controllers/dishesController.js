@@ -87,7 +87,7 @@ export class DishesController {
   }
 
   async index(req, res) {
-    const { dish, ingredient } = req.query
+    const { search } = req.query
 
     try {
       let dishesQuery = knex('dishes')
@@ -95,18 +95,11 @@ export class DishesController {
         .distinct()
         .orderBy('dishes.name')
 
-      if (dish) {
-        dishesQuery = dishesQuery.where('dishes.name', 'like', `%${dish}%`)
-      }
-
-      if (ingredient) {
-        const ingredientFilter = ingredient
-          .split(',')
-          .map((ingredient) => ingredient.trim())
-
+      if (search) {
         dishesQuery = dishesQuery
+          .where('dishes.name', 'like', `%${search}%`)
+          .orWhere('ingredients.name', 'like', `%${search}%`)
           .join('ingredients', 'dishes.id', '=', 'ingredients.dish_id')
-          .whereIn('ingredients.name', ingredientFilter)
       }
 
       const dishes = await dishesQuery
