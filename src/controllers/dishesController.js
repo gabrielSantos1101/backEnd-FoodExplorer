@@ -67,18 +67,11 @@ export class DishesController {
   }
 
   async show(req, res) {
+    const { id } = req.params
     try {
-      const dishes = await knex.select('*').from('dishes')
-      const dishesWithIngredients = await Promise.all(
-        dishes.map(async (dish) => {
-          const ingredients = await knex('ingredients')
-            .where('dish_id', dish.id)
-            .orderBy('name')
-
-          return { ...dish, ingredients }
-        }),
-      )
-
+      const dish = await knex.select('*').from('dishes').where('id', id)
+      const ingredients = await knex('ingredients').where('dish_id', id)
+      const dishesWithIngredients = { dish, ingredients }
       return res.status(200).json(dishesWithIngredients)
     } catch (error) {
       AppError('Erro ao buscar pratos:', error)

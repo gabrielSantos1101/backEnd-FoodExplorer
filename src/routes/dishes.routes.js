@@ -9,7 +9,7 @@ const dishesController = new DishesController()
 dishesRoutes.use(verifyUserAuthenticated)
 
 dishesRoutes.get('/', dishesController.index)
-dishesRoutes.get('/', dishesController.show)
+dishesRoutes.get('/:id', dishesController.show)
 dishesRoutes.post('/', adminMiddleware, dishesController.create)
 dishesRoutes.put('/:id', adminMiddleware, dishesController.update)
 dishesRoutes.delete('/:id', adminMiddleware, dishesController.delete)
