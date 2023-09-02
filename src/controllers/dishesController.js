@@ -69,7 +69,7 @@ export class DishesController {
   async show(req, res) {
     const { id } = req.params
     try {
-      const dish = await knex.select('*').from('dishes').where('id', id)
+      const dish = await knex.select('*').from('dishes').where('id', id).first()
       const ingredients = await knex('ingredients').where('dish_id', id)
       const dishesWithIngredients = { dish, ingredients }
       return res.status(200).json(dishesWithIngredients)
