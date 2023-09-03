@@ -84,7 +84,15 @@ export class DishesController {
 
     try {
       let dishesQuery = knex('dishes')
-        .select(['dishes.id', 'dishes.name'])
+        .select([
+          'dishes.id',
+          'dishes.name',
+          'dishes.price',
+          'dishes.description',
+          'dishes.image',
+          'dishes.category',
+          'dishes.created_at',
+        ])
         .distinct()
         .orderBy('dishes.name')
 
