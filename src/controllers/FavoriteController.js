@@ -29,7 +29,7 @@ export class FavoriteController {
     const dishes = await knex('favorites')
       .where({ user_id })
       .join('dishes', 'favorites.dish_id', '=', 'dishes.id')
-      .select('dishes.name', 'dishes.image', 'dishes.price')
+      .select('dishes.name', 'dishes.id', 'dishes.image', 'dishes.price')
       .orderBy('name')
 
     if (!dishes.length) {

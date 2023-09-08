@@ -1,16 +1,15 @@
 /* eslint-disable camelcase */
 import bcryptjs from 'bcryptjs'
-import { dbConnect } from '../database/sqlite/index.js'
 import { AppError } from '../utils/AppError.js'
+import knex from '../database/knex/index.js'
 
 export class UserController {
   async create(req, res) {
     const { name, email, password } = req.body
-    const database = await dbConnect()
-    const checkUser = await database.get(
-      'SELECT * FROM users WHERE email = (?)',
-      [email],
-    )
+    const checkUser = await knex('users')
+      .where('email', email)
+      .select('*')
+      .first()
 
     if (checkUser) {
       throw new AppError('Esse email já foi cadastrado', 409)
@@ -18,10 +17,12 @@ export class UserController {
 
     const hashedPassword = await bcryptjs.hash(password, 8)
 
-    await database.run(
-      'INSERT INTO users (name, email, password, isAdmin) VALUES (?, ?, ?, ?)',
-      [name, email, hashedPassword, false],
-    )
+    await knex('users').insert({
+      name,
+      email,
+      password: hashedPassword,
+      isAdmin: false,
+    })
 
     res.status(201).json()
   }
@@ -31,23 +32,19 @@ export class UserController {
 
     const user_id = req.params.id
 
-    const database = await dbConnect()
-
-    const user = await database.get('SELECT * FROM users WHERE id = (?)', [
-      user_id,
-    ])
+    const user = await knex('users').where('id', user_id).select('*').first()
 
     if (!user) {
       throw new Error('User not found', 404)
     }
 
-    const userWithUpdateEmail = await database.get(
-      'SELECT * FROM users WHERE email = (?)',
-      [email],
-    )
+    const userWithUpdateEmail = await knex('users')
+      .where('email', email)
+      .select('*')
+      .first()
 
     if (userWithUpdateEmail && userWithUpdateEmail.id !== user.id) {
-      throw new Error('This email is already registered', 409)
+      throw new Error('Esse email já foi cadastrado', 409)
     }
 
     user.name = name ?? user.name
@@ -75,24 +72,16 @@ export class UserController {
       }
     }
 
-    await database.run(
-      `UPDATE users SET 
-    name = (?), 
-    email = (?), 
-    password = (?),
-    avatar = (?),
-    address = (?),
-    updated_at = DATETIME('now') 
-    WHERE id = (?)`,
-      [
-        user.name,
-        user.email,
-        user.password,
-        user.avatar,
-        user.address,
-        user_id,
-      ],
-    )
+    await knex('users')
+      .update({
+        name: user.name,
+        email: user.email,
+        password: user.password,
+        avatar: user.avatar,
+        address: user.address,
+        updated_at: knex.raw('CURRENT_TIMESTAMP'),
+      })
+      .where('id', user_id)
 
     return res.json()
   }

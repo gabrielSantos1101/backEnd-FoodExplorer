@@ -1,16 +1,14 @@
 /* eslint-disable camelcase */
 import { AppError } from '../utils/AppError.js'
-import { dbConnect } from '../database/sqlite/index.js'
 import knex from '../database/knex/index.js'
 
 export class DishesController {
   async create(req, res) {
     const { name, description, image, price, category, ingredients } = req.body
-    const database = await dbConnect()
-    const checkDish = await database.get(
-      'SELECT * FROM dishes WHERE name = (?)',
-      [name],
-    )
+    const checkDish = await knex('dishes')
+      .where('name', name)
+      .select('*')
+      .first()
 
     if (checkDish) {
       throw new AppError('Esse prato já foi cadastrado', 409)
