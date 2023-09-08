@@ -6,12 +6,25 @@ import { verifyUserAuthenticated } from '../middlewares/authMidleware.js'
 const dishesRoutes = Router()
 const dishesController = new DishesController()
 
-dishesRoutes.use(verifyUserAuthenticated)
-
 dishesRoutes.get('/', dishesController.index)
 dishesRoutes.get('/:id', dishesController.show)
-dishesRoutes.post('/', adminMiddleware, dishesController.create)
-dishesRoutes.put('/:id', adminMiddleware, dishesController.update)
-dishesRoutes.delete('/:id', adminMiddleware, dishesController.delete)
+dishesRoutes.post(
+  '/',
+  adminMiddleware,
+  verifyUserAuthenticated,
+  dishesController.create,
+)
+dishesRoutes.put(
+  '/:id',
+  adminMiddleware,
+  verifyUserAuthenticated,
+  dishesController.update,
+)
+dishesRoutes.delete(
+  '/:id',
+  adminMiddleware,
+  verifyUserAuthenticated,
+  dishesController.delete,
+)
 
 export { dishesRoutes }
