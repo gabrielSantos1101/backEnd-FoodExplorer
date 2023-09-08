@@ -33,7 +33,7 @@ export class FavoriteController {
       .orderBy('name')
 
     if (!dishes.length) {
-      throw new AppError('Não há favoritos', 404)
+      res.status(200).json({ message: 'Não há favoritos' })
     }
 
     res.status(200).json(dishes)
