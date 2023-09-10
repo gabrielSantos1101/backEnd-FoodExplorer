@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import Path from './src/utils/Path.js'
-import path from 'path'
+import * as path from 'path';
 
-export default {
+ const knexConfig = {
   development: {
     client: 'sqlite3',
     connection: {
@@ -28,3 +28,5 @@ export default {
     useNullAsDefault: true,
   },
 }
+
+export default knexConfig
