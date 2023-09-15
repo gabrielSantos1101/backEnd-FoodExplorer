@@ -1,7 +1,7 @@
 import { Router } from 'express'
 
-import { verifyUserAuthenticated } from '../middlewares/authMidleware.js'
 import { FavoriteController } from '../controllers/FavoriteController.js'
+import { verifyUserAuthenticated } from '../middlewares/authAutentication.js'
 
 const favoritesRoutes = Router()
 const favoritesController = new FavoriteController()

@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { UserController } from '../controllers/UserController.js'
-import { verifyUserAuthenticated } from '../middlewares/authMidleware.js'
+import { verifyUserAuthenticated } from '../middlewares/authAutentication.js'
 
 const userRoutes = Router()
 const userController = new UserController()
