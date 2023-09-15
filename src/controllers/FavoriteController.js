@@ -34,9 +34,9 @@ export class FavoriteController {
 
     if (!dishes.length) {
       res.status(200).json({ message: 'Não há favoritos' })
+    } else {
+      res.status(200).json(dishes)
     }
-
-    res.status(200).json(dishes)
   }
 
   async delete(req, res) {
