@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
-import { AppError } from '../utils/AppError.js'
 import knex from '../database/knex/index.js'
+import { AppError } from '../utils/AppError.js'
 
 export class DishesController {
   async create(req, res) {
