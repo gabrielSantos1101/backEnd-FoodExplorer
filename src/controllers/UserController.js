@@ -46,15 +46,15 @@ export class UserController {
       throw new Error('Usuário não encontrado', 404)
     }
 
-    const userWithUpdateEmail = await knex('users')
-      .where('email', email)
-      .select('email', 'id')
-      .first()
+    if (email) {
+      const userWithUpdateEmail = await knex('users')
+        .where('email', email)
+        .select('email', 'id')
+        .first()
 
-    console.log('ok')
-
-    if (userWithUpdateEmail && userWithUpdateEmail.id !== user.id) {
-      throw new Error('Esse email já foi cadastrado', 409)
+      if (userWithUpdateEmail && userWithUpdateEmail.id !== user.id) {
+        throw new Error('Esse email já foi cadastrado', 409)
+      }
     }
 
     user.name = name ?? user.name
@@ -67,7 +67,7 @@ export class UserController {
       const checkPassword = await bcryptjs.compare(password, user.password)
 
       if (checkPassword) {
-        throw new Error('As senhas são iguais', 400)
+        throw new Error('As senhas não são iguais', 400)
       }
 
       user.password = await bcryptjs.hash(password, 8)
