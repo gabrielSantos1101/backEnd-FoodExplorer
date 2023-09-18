@@ -6,6 +6,7 @@ const userRoutes = Router()
 const userController = new UserController()
 
 userRoutes.post('/', userController.create)
-userRoutes.put('/:id', verifyUserAuthenticated, userController.update)
+userRoutes.put('/', verifyUserAuthenticated, userController.update)
+userRoutes.get('/', verifyUserAuthenticated, userController.index)
 
 export { userRoutes }
