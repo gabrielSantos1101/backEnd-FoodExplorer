@@ -34,6 +34,7 @@ export class UserController {
     const { name, email, password, avatar, address } = req.body
     const bearer = req.headers.authorization
     const [, token] = bearer.split(' ')
+    const jsonAdress = JSON.stringify(address)
 
     const { secret } = authConfigs.jwt
     const payload = decode(token, secret)
@@ -59,7 +60,7 @@ export class UserController {
     user.name = name ?? user.name
     user.email = email ?? user.email
     user.avatar = avatar ?? user.avatar
-    user.address = address ?? user.address
+    user.address = jsonAdress ?? user.address
     user.password = password
 
     if (password) {
