@@ -50,6 +50,8 @@ export class UserController {
       .select('email', 'id')
       .first()
 
+    console.log('ok')
+
     if (userWithUpdateEmail && userWithUpdateEmail.id !== user.id) {
       throw new Error('Esse email já foi cadastrado', 409)
     }
