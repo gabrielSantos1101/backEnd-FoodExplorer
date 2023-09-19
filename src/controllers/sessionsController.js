@@ -1,14 +1,17 @@
 import bcryptjs from 'bcryptjs'
-import knex from '../database/knex/index.js'
 import pkg from 'jsonwebtoken'
 import authConfigs from '../configs/auth.js'
+import knex from '../database/knex/index.js'
 import { AppError } from '../utils/AppError.js'
 const { sign } = pkg
 
 export class SessionsController {
   async create(request, response) {
     const { password, email } = request.body
-    const user = await knex('users').where({ email }).first()
+    const user = await knex('users')
+      .where({ email })
+      .select('name', 'password', 'isAdmin', 'avatar')
+      .first()
 
     if (!user) {
       throw new AppError('usuario ou senha incorreta', 401)
@@ -18,6 +21,8 @@ export class SessionsController {
     if (!passwordMatch) {
       throw new AppError('usuario ou senha incorreta', 401)
     }
+
+    delete user.password
 
     const { secret, expiresIn } = authConfigs.jwt
     const token = sign({ isAdmin: String(user.isAdmin) }, secret, {
