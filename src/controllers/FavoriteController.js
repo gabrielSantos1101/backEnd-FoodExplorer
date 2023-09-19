@@ -1,11 +1,20 @@
 /* eslint-disable camelcase */
+import pkg from 'jsonwebtoken'
+import authConfigs from '../configs/auth.js'
 import knex from '../database/knex/index.js'
 import { AppError } from '../utils/AppError.js'
+const { decode } = pkg
 
 export class FavoriteController {
   async create(req, res) {
-    const user_id = req.user.id
     const { dish_id } = req.params
+    const bearer = req.headers.authorization
+    const [, token] = bearer.split(' ')
+
+    const { secret } = authConfigs.jwt
+
+    const payload = decode(token, secret)
+    const user_id = payload.sub
 
     const favoriteExists = await knex('favorites')
       .select('id')

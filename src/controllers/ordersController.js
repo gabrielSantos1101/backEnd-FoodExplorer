@@ -1,12 +1,21 @@
 /* eslint-disable camelcase */
+import pkg from 'jsonwebtoken'
+import authConfigs from '../configs/auth.js'
 import knex from '../database/knex/index.js'
 import { AppError } from '../utils/AppError.js'
+const { decode } = pkg
 
 export class OrdersController {
   async create(req, res) {
     try {
       const { dishes } = req.body
-      const user_id = req.user.id
+      const bearer = req.headers.authorization
+
+      const [, token] = bearer.split(' ')
+      const { secret } = authConfigs.jwt
+
+      const payload = decode(token, secret)
+      const user_id = payload.sub
 
       const userAddress = await knex('users')
         .where('id', user_id)
@@ -72,8 +81,16 @@ export class OrdersController {
   }
 
   async show(req, res) {
+    const bearer = req.headers.authorization
+
+    const [, token] = bearer.split(' ')
+    const { secret } = authConfigs.jwt
+
+    const payload = decode(token, secret)
+    const user_id = payload.sub
+
     try {
-      const orders = await knex('orders').select('*')
+      const orders = await knex('orders').where({ user_id }).select('*')
 
       return res.status(200).json({ orders })
     } catch (error) {
@@ -106,7 +123,13 @@ export class OrdersController {
   async delete(req, res) {
     try {
       const { id } = req.params
-      const user_id = req.user.id
+      const bearer = req.headers.authorization
+
+      const [, token] = bearer.split(' ')
+      const { secret } = authConfigs.jwt
+
+      const payload = decode(token, secret)
+      const user_id = payload.sub
 
       const order = await knex('orders').where({ id, user_id }).first()
 

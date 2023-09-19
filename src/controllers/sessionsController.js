@@ -10,7 +10,7 @@ export class SessionsController {
     const { password, email } = request.body
     const user = await knex('users')
       .where({ email })
-      .select('name', 'password', 'isAdmin', 'avatar')
+      .select('name', 'id', 'password', 'isAdmin', 'avatar')
       .first()
 
     if (!user) {
