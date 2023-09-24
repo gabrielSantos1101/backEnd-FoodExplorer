@@ -5,7 +5,7 @@
 create
 ```json
 {
-    "name": "Jhon Doe",
+  "name": "Jhon Doe",
   "email": "jhondoe@gmail.com",
   "password": "123456"
 }
@@ -34,7 +34,7 @@ retorno da API
   "name": "Jhon Doe",
   "email": "jhondoe@gmail.com",
   "avatar": "https://github.com/gabrielsantos1101.png",
-  ""address":{
+  "address":{
     "cep": "214343",
     "street":"Rua pinheiro",
     "number":"182",
