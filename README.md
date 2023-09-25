@@ -67,6 +67,8 @@ Siga os passos abaixo para instalar e configurar a aplicação em um ambiente lo
 5. ▶️ **Inicie o servidor:**
 
     ```bash
+    npm run migrate
+    
     npm run dev
     ```
 
