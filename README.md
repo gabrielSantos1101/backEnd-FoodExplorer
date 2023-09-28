@@ -81,7 +81,7 @@ Liste as principais tecnologias e bibliotecas que você usou no projeto, como:
 - [**sqlite**](https://www.sqlite.org/index.html)
 - [**bcryptjs**](https://www.npmjs.com/package/bcrypt/)
 - [**cors**](https://www.npmjs.com/package/cors)
-- [**expless**](https://www.npmjs.com/package/express)
+- [**express**](https://www.npmjs.com/package/express)
 - [**express-async-errors**](https://www.npmjs.com/package/express-async-errors)
 - [**jsonwebtoken**](https://www.npmjs.com/package/jsonwebtoken)
 - [**knex**](https://www.npmjs.com/package/knex)
