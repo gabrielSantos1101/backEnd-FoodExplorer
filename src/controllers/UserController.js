@@ -43,7 +43,7 @@ export class UserController {
     const user = await knex('users').where('id', user_id).select('*').first()
 
     if (!user) {
-      throw new Error('Usuário não encontrado', 404)
+      throw new AppError('Usuário não encontrado', 404)
     }
 
     if (email) {
@@ -53,7 +53,7 @@ export class UserController {
         .first()
 
       if (userWithUpdateEmail && userWithUpdateEmail.id !== user.id) {
-        throw new Error('Esse email já foi cadastrado', 409)
+        throw new AppError('Esse email já foi cadastrado', 409)
       }
     }
 
@@ -61,22 +61,12 @@ export class UserController {
     user.email = email ?? user.email
     user.avatar = avatar ?? user.avatar
     user.address = jsonAdress ?? user.address
-    user.password = password
 
     if (password) {
       const checkPassword = await bcryptjs.compare(password, user.password)
 
-      if (checkPassword) {
-        throw new Error('As senhas não são iguais', 400)
-      }
-
-      user.password = await bcryptjs.hash(password, 8)
-    }
-
-    if ((password && address) || (password && avatar)) {
-      const checkOldPassword = await bcryptjs.compare(password, user.password)
-      if (!checkOldPassword) {
-        throw new Error('password error', 401)
+      if (!checkPassword) {
+        throw new AppError('As senha inconpatíveis', 400)
       }
     }
 
@@ -84,7 +74,6 @@ export class UserController {
       .update({
         name: user.name,
         email: user.email,
-        password: user.password,
         avatar: user.avatar,
         address: user.address,
         updated_at: knex.raw('CURRENT_TIMESTAMP'),
