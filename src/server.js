@@ -1,6 +1,6 @@
-import 'express-async-errors'
-import express from 'express'
 import cors from 'cors'
+import express from 'express'
+import 'express-async-errors'
 
 import dotenv from 'dotenv'
 import { routes } from './routes/index.js'
@@ -13,7 +13,7 @@ const app = express()
 app.use(express.json())
 app.use(
   cors({
-    origin: '*',
+    origin: process.env.FRONTEND_URL,
     optionsSuccessStatus: 200,
   }),
 )
